@@ -5,10 +5,10 @@
 * HTTP Server over Unix Domain Socket を実装する
 * POST /call で呼び出される、これをハンドルする
 * bind する ファイルのパスは環境変数 FN_LISTENER で渡される (/tmp/iofs/lsnr.sock)
-  - 直接 bind せずに 指定されたパスと同一ディレクトリに別のファイル名 (例: YvzDu6m9_lsnr.sock)で bind する
+  - 直接 bind せずに 指定されたパスと同一ディレクトリの別のファイル名 (例: YvzDu6m9_lsnr.sock)で bind する
   - このファイルに rw-rw-rw- のアクセス権限を設定する
   - これに相対パスのシンボリックリンクを張る
-  - 結果実行時にはこんなファイル構成となっている
+  - 結果、実行時にはこんなファイル構成となっている
     ```
     lrwxrwxrwx. 1 root root 17 Mar  3 17:45 /tmp/iofs/lsnr.sock -> YvzDu6m9_fnlsnr.sock
     srw-rw-rw-. 1 root root  0 Mar  3 17:45 /tmp/iofs/YvzDu6m9_lsnr.sock
@@ -104,73 +104,75 @@ $ export mainClass=org.example.reactor.FnServer
 
 ## デモ
 
-Local 環境
+* Local 環境
 
-```
-$ curl --unix-socket /tmp/fnlsnr.sock -X POST -d 'Hello World!' http:/call
-FN-NETTY (REACTOR) SERVER
-===================================
-VERSION: HTTP/1.1
-HOSTNAME: http
-REQUEST_URI: /call
+  ```
+  $ curl --unix-socket /tmp/fnlsnr.sock -X POST -d 'Hello World!' http:/call
+  FN-NETTY (REACTOR) SERVER
+  ===================================
+  VERSION: HTTP/1.1
+  HOSTNAME: http
+  REQUEST_URI: /call
+  
+  HEADER: User-Agent = curl/7.29.0
+  HEADER: Host = http
+  HEADER: Accept = */*
+  HEADER: Content-Length = 12
+  HEADER: Content-Type = application/x-www-form-urlencoded
+  
+  CONTENT: Hello World!
+  END OF CONTENT
+  ```
 
-HEADER: User-Agent = curl/7.29.0
-HEADER: Host = http
-HEADER: Accept = */*
-HEADER: Content-Length = 12
-HEADER: Content-Type = application/x-www-form-urlencoded
+* Local Fn Server
 
-CONTENT: Hello World!
-END OF CONTENT
-```
+  ```
+  $ echo -n 'Hello World!' | fn invoke funcapp fn-netty
+  FN-NETTY (REACTOR) SERVER
+  ===================================
+  VERSION: HTTP/1.1
+  HOSTNAME: localhost
+  REQUEST_URI: /call
+  
+  HEADER: Host = localhost
+  HEADER: User-Agent = Go-http-client/1.1
+  HEADER: Transfer-Encoding = chunked
+  HEADER: Accept-Encoding = gzip
+  HEADER: Content-Type = text/plain
+  HEADER: Fn-Call-Id = 01F0MT4Q21NG8G00GZJ0000005
+  HEADER: Fn-Deadline = 2021-03-13T03:35:10Z
+  
+  CONTENT: Hello World!
+  END OF CONTENT
+  ```
 
-Local Fn Server
+* OCI Functions
 
-```
-$ echo -n 'Hello World!' | fn invoke funcapp fn-netty
-FN-NETTY (REACTOR) SERVER
-===================================
-VERSION: HTTP/1.1
-HOSTNAME: localhost
-REQUEST_URI: /call
-
-HEADER: Host = localhost
-HEADER: User-Agent = Go-http-client/1.1
-HEADER: Transfer-Encoding = chunked
-HEADER: Accept-Encoding = gzip
-HEADER: Content-Type = text/plain
-HEADER: Fn-Call-Id = 01F0MT4Q21NG8G00GZJ0000005
-HEADER: Fn-Deadline = 2021-03-13T03:35:10Z
-
-CONTENT: Hello World!
-END OF CONTENT
-```
-
-OCI Functions
-
-```
-$ echo -n 'Hello World!' | fn invoke funcapp fn-netty
-FN-NETTY (REACTOR) SERVER
-===================================
-VERSION: HTTP/1.1
-HOSTNAME: localhost
-REQUEST_URI: /call
-
-HEADER: Host = localhost
-HEADER: User-Agent = Go-http-client/1.1
-HEADER: Transfer-Encoding = chunked
-HEADER: Accept-Encoding = gzip
-HEADER: Content-Type = application/json
-HEADER: Date = Sat, 13 Mar 2021 03:38:15 GMT
-HEADER: Fn-Call-Id = 01F0MTKJ5B1BT0G60ZJ001JFKX
-HEADER: Fn-Deadline = 2021-03-13T03:43:48Z
-HEADER: Oci-Subject-Id = ocid1.user.oc1..
-HEADER: Oci-Subject-Tenancy-Id = ocid1.tenancy.oc1..
-HEADER: Oci-Subject-Type = user
-HEADER: Opc-Compartment-Id = ocid1.compartment.oc1..
-HEADER: Opc-Request-Id = /01F0MTKJ331BT0G60ZJ001JFKV/01F0MTKJ331BT0G60ZJ001JFKW
-HEADER: X-Content-Sha256 = A7ogTlDRJuRnTABeBNguhMITZngK8fQ71Uo3gWtqs0A=
-
-CONTENT: Hello World!
-END OF CONTENT
-```
+  ```
+  $ echo -n 'Hello World!' | fn invoke funcapp fn-netty
+  FN-NETTY (REACTOR) SERVER
+  ===================================
+  VERSION: HTTP/1.1
+  HOSTNAME: localhost
+  REQUEST_URI: /call
+  
+  HEADER: Host = localhost
+  HEADER: User-Agent = Go-http-client/1.1
+  HEADER: Transfer-Encoding = chunked
+  HEADER: Accept-Encoding = gzip
+  HEADER: Content-Type = application/json
+  HEADER: Date = Sat, 13 Mar 2021 03:38:15 GMT
+  HEADER: Fn-Call-Id = 01F0MTKJ5B1BT0G60ZJ001JFKX
+  HEADER: Fn-Deadline = 2021-03-13T03:43:48Z
+  HEADER: Oci-Subject-Id = ocid1.user.oc1..
+  HEADER: Oci-Subject-Tenancy-Id = ocid1.tenancy.oc1..
+  HEADER: Oci-Subject-Type = user
+  HEADER: Opc-Compartment-Id = ocid1.compartment.oc1..
+  HEADER: Opc-Request-Id = /01F0MTKJ331BT0G60ZJ001JFKV/01F0MTKJ331BT0G60ZJ001JFKW
+  HEADER: X-Content-Sha256 = A7ogTlDRJuRnTABeBNguhMITZngK8fQ71Uo3gWtqs0A=
+  
+  CONTENT: Hello World!
+  END OF CONTENT
+  ```
+  
+  OCI Functions `Content-Type: application/json` になってる...
