@@ -4,8 +4,10 @@
 
 * HTTP Server over Unix Domain Socket を実装する
 * POST /call で呼び出される、これをハンドルする
-* bind する ファイルのパスは環境変数 FN_LISTENER で渡される (/tmp/iofs/lsnr.sock)
-  - 直接 bind せずに 指定されたパスと同一ディレクトリの別のファイル名 (例: YvzDu6m9_lsnr.sock)で bind する
+* bind する ファイルのパスは環境変数 FN_LISTENER で渡される  
+  例: /tmp/iofs/lsnr.sock
+  - 直接 bind せずに 指定されたパスと同一ディレクトリの別のファイル名で bind する  
+    例: /tmp/iofs/YvzDu6m9_lsnr.sock
   - このファイルに rw-rw-rw- のアクセス権限を設定する
   - これに相対パスのシンボリックリンクを張る
   - 結果、実行時にはこんなファイル構成となっている
@@ -26,8 +28,9 @@
   snoopと同じ出力になるように実装
 
 ## netty 使用時の実装 tips
-* netty は Unix Domain Socket を扱うための native library (.so) が必要で、デフォルトでは実行時にダイナミックにファイルを配置するようで、Dockerコンテナ内で動作させるとうまく動作しない模様 - imageのビルド時に特定のディレクトリに native library を配置して、起動オプションで `-Djava.library.path=` を指定することによってこの問題を回避した、本来はちゃんと原因追及するべき...
-* OCI Functions のメモリーの設定に気をつける (128 では何も吐かずに勝手に落ちる)
+* netty は Unix Domain Socket を扱うための native library (.so) が必要で、デフォルトでは実行時にダイナミックにファイルを配置するようで、Dockerコンテナ内で動作させるとうまく動作しない模様  
+  → imageのビルド時に特定のディレクトリに native library を配置して、起動オプションで `-Djava.library.path=xxx` を指定することによってこの問題を回避した、本来はちゃんと原因追及するべき...
+* OCI Functions のメモリー量の指定に気をつける (128 では小さくて何も吐かずに勝手に落ちた)
 
 ## ビルド & 実行
 
