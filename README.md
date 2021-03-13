@@ -5,9 +5,9 @@
 * HTTP Server over Unix Domain Socket を実装する
 * POST /call で呼び出される、これをハンドルする
 * bind する ファイルのパスは環境変数 FN_LISTENER で渡される  
-  例: /tmp/iofs/lsnr.sock
+  例: `/tmp/iofs/lsnr.sock`
   - 直接 bind せずに 指定されたパスと同一ディレクトリの別のファイル名で bind する  
-    例: /tmp/iofs/YvzDu6m9_lsnr.sock
+    例: `/tmp/iofs/YvzDu6m9_lsnr.sock`
   - このファイルに rw-rw-rw- のアクセス権限を設定する
   - これに相対パスのシンボリックリンクを張る
   - 結果、実行時にはこんなファイル構成となっている
