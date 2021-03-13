@@ -84,7 +84,7 @@ $ export mainClass=org.example.reactor.FnServer
   $ fn deploy -app funcapp --build-arg mainClass=$mainClass --local --no-bump -v
 
   # call function
-  $ echo 'Hello World!' | fn invoke funcapp fn-netty
+  $ echo -n 'Hello World!' | fn invoke funcapp fn-netty
   ```
 
 * OCI Functions にデプロイ & 実行
@@ -99,7 +99,7 @@ $ export mainClass=org.example.reactor.FnServer
   $ fn deploy -app funcapp --build-arg mainClass=$mainClass --local --no-bump -v
 
   # call functions
-  $ echo 'Hello World!' | fn invoke funcapp fn-netty
+  $ echo -n 'Hello World!' | fn invoke funcapp fn-netty
   ```
 
 ## デモ

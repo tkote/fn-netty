@@ -71,7 +71,7 @@ public class FnServer extends FnServerBase{
             throw new RuntimeException("Couldn't bind socket: " + t.getMessage(), t);
         }
         return channelFuture;
-}
+    }
 
     @Override
     public void run(){
