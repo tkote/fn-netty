@@ -33,7 +33,7 @@ public class FnServer extends FnServerBase{
     private ChannelFuture channelFuture;
 
     @Override
-    public Object prepare(Path sock){
+    public Runnable prepare(Path sock){
 
         final ServerBootstrap b = new ServerBootstrap(); 
                                     
@@ -70,7 +70,11 @@ public class FnServer extends FnServerBase{
             final Throwable t = channelFuture.cause();
             throw new RuntimeException("Couldn't bind socket: " + t.getMessage(), t);
         }
-        return channelFuture;
+        return () -> {
+            try{
+                channelFuture.channel().close().await();
+            }catch(Exception e){}
+        };
     }
 
     @Override

@@ -1,7 +1,6 @@
 package org.example;
 
 
-import io.netty.channel.ChannelFuture;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,7 +17,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.netty.util.internal.logging.JdkLoggerFactory;
-import reactor.netty.DisposableServer;
 
 
 public abstract class FnServerBase {
@@ -58,7 +56,7 @@ public abstract class FnServerBase {
         }
     }
 
-    public void close(){
+    public void clean(){
         deleteFile(Paths.get(path));
     }
 
@@ -72,31 +70,25 @@ public abstract class FnServerBase {
         deleteFile(actual);
         deleteFile(phony);
         logger.info("Starting...");
-        final Object obj = prepare(phony);
-        addShutdownHook(obj);
+        final Runnable runnable = prepare(phony);
+        addShutdownHook(runnable);
         createSymbolicLink(actual, phony);
         logger.info("Server started.");
         run();
         logger.info("Server stopped.");
-        close();
+        clean();
     }
 
-    public void addShutdownHook(Object obj){
+    public void addShutdownHook(Runnable runnable){
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try{
-                logger.info("Shutdown...");
-                if(obj instanceof ChannelFuture){
-                    ((ChannelFuture)obj).channel().close().await();
-                }else if(obj instanceof DisposableServer){
-                    ((DisposableServer)obj).disposeNow();
-                }
-            }catch(Exception e){}
-            close();
+            logger.info("Shutdown...");
+            runnable.run();
+            clean();
             Arrays.stream(logger.getHandlers()).forEach(handler -> handler.flush());
         }));
     }
 
-    public abstract Object prepare(Path sock);
+    public abstract Runnable prepare(Path sock);
     public abstract void run();
 
 }

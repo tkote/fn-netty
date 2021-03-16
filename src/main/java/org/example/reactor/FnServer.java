@@ -17,7 +17,7 @@ public class FnServer extends FnServerBase{
     private DisposableServer server;
 
     @Override
-    public Object prepare(Path sock){
+    public Runnable prepare(Path sock){
         server =
         HttpServer.create()   // Prepares an HTTP server ready for configuration
         .bindAddress(() -> new DomainSocketAddress(sock.toString()))
@@ -25,7 +25,7 @@ public class FnServer extends FnServerBase{
                 routes.post("/call", new SnoopHandler())
         )
         .bindNow(); // Starts the server in a blocking fashion, and waits for it to finish its initialization
-        return server;
+        return () -> server.disposeNow();
     }
 
     @Override
