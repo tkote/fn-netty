@@ -44,7 +44,7 @@ public abstract class FnServerBase {
         }catch(Exception e){}
     }
 
-    protected void createSymbolicLink(Path link, Path target){
+    private void createSymbolicLink(Path link, Path target){
         try{
             final Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rw-rw-rw-");
             Files.setPosixFilePermissions(target, permissions);
@@ -56,8 +56,17 @@ public abstract class FnServerBase {
         }
     }
 
-    public void clean(){
+    private void clean(){
         deleteFile(Paths.get(listener));
+    }
+
+    private void addShutdownHook(Runnable runnable){
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.info("Shutdown...");
+            runnable.run();
+            clean();
+            Arrays.stream(logger.getHandlers()).forEach(handler -> handler.flush());
+        }));
     }
 
     public void serve() throws Exception{
@@ -79,15 +88,6 @@ public abstract class FnServerBase {
         }finally{
             clean();
         }
-    }
-
-    public void addShutdownHook(Runnable runnable){
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            logger.info("Shutdown...");
-            runnable.run();
-            clean();
-            Arrays.stream(logger.getHandlers()).forEach(handler -> handler.flush());
-        }));
     }
 
     public abstract Runnable prepare(Path sock);
