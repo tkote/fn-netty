@@ -16,6 +16,23 @@
     srw-rw-rw-. 1 root root  0 Mar  3 17:45 /tmp/iofs/YvzDu6m9_lsnr.sock
     ```
 
+## How to create an Fn (OCI Functions) Function without FDK
+
++ Implement HTTP Server over Unix Domain Socket
++ Handle POST /call
++ The file name to be bound is passed via the environment variable FN_LISTENER  
+  example: /tmp/iofs/lsnr.sock
+  - Bind socket to another file which is different from FN_LISTENER located in the same directory  
+    example: /tmp/iofs/YvzDu6m9_lsnr.sock
+  - Set rw-rw-rw- permission to this file
+  - Create a symbolic link named FN_LISTENER which is linked to this file with a relative path
+  - As a result, the placement of files is like this
+    ```
+    lrwxrwxrwx. 1 root root 17 Mar  3 17:45 /tmp/iofs/lsnr.sock -> YvzDu6m9_fnlsnr.sock
+    srw-rw-rw-. 1 root root  0 Mar  3 17:45 /tmp/iofs/YvzDu6m9_lsnr.sock
+    ```
+
+
 ## 実装
 
 つまり Unix Domain Socket に対応した HTTP Server フレームワークを使うのが手っ取り早い  
