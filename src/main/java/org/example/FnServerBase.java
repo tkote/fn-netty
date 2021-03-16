@@ -22,7 +22,7 @@ import io.netty.util.internal.logging.JdkLoggerFactory;
 public abstract class FnServerBase {
     private static final Logger logger = Logger.getLogger(FnServerBase.class.getName());
 
-    private final String path;
+    private final String listener;
 
     static{
         try (InputStream is = FnServerBase.class.getResourceAsStream("/logging.properties")) {
@@ -34,8 +34,8 @@ public abstract class FnServerBase {
     }
 
 	public FnServerBase() {
-        path = Optional.ofNullable(System.getenv("FN_LISTENER")).orElse("/tmp/fnlsnr.sock").replace("unix:", "");
-        logger.info("Listener path: " + path);
+        listener = Optional.ofNullable(System.getenv("FN_LISTENER")).orElse("/tmp/fnlsnr.sock").replace("unix:", "");
+        logger.info("Listener path: " + listener);
 	}
 
     private void deleteFile(Path path){
@@ -57,26 +57,28 @@ public abstract class FnServerBase {
     }
 
     public void clean(){
-        deleteFile(Paths.get(path));
+        deleteFile(Paths.get(listener));
     }
 
     public void serve() throws Exception{
 
-        final Path actual = Paths.get(path);
-
+        final Path actual = Paths.get(listener);
         final String prefix = RandomStringUtils.randomAlphanumeric(8);
         final Path phony = Paths.get(actual.getParent().toString(), prefix + "_" + actual.getFileName().toString());
 
         deleteFile(actual);
         deleteFile(phony);
-        logger.info("Starting...");
-        final Runnable runnable = prepare(phony);
-        addShutdownHook(runnable);
-        createSymbolicLink(actual, phony);
-        logger.info("Server started.");
-        run();
-        logger.info("Server stopped.");
-        clean();
+        try{
+            logger.info("Starting...");
+            final Runnable runnable = prepare(phony);
+            addShutdownHook(runnable);
+            createSymbolicLink(actual, phony);
+            logger.info("Server started.");
+            run();
+            logger.info("Server stopped.");
+        }finally{
+            clean();
+        }
     }
 
     public void addShutdownHook(Runnable runnable){
