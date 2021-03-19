@@ -15,6 +15,7 @@ RUN mvn package -DskipTests
 
 ARG mainClass
 ENV mainClass ${mainClass}
+RUN printenv mainClass
 
 # Do the Maven build!
 # Incremental docker builds will resume here when you change sources

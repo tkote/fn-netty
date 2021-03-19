@@ -116,7 +116,7 @@ $ export mainClass=org.example.reactor.FnServer
   $ fn use context XXXXXX
 
   # deploy function
-  $ fn deploy -app funcapp --build-arg mainClass=$mainClass --local --no-bump -v
+  $ fn deploy -app funcapp --build-arg mainClass=$mainClass --no-bump -v
 
   # call functions
   $ echo -n 'Hello World!' | fn invoke funcapp fn-netty
