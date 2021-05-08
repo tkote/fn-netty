@@ -12,8 +12,9 @@
   - これに相対パスのシンボリックリンクを張る
   - 結果、実行時にはこんなファイル構成となっている
     ```
-    lrwxrwxrwx. 1 root root 17 Mar  3 17:45 /tmp/iofs/lsnr.sock -> YvzDu6m9_fnlsnr.sock
-    srw-rw-rw-. 1 root root  0 Mar  3 17:45 /tmp/iofs/YvzDu6m9_lsnr.sock
+    $ ls -l /tmp/iofs
+    lrwxrwxrwx. 1 root root 17 Mar  3 17:45 lsnr.sock -> YvzDu6m9_lsnr.sock
+    srw-rw-rw-. 1 root root  0 Mar  3 17:45 YvzDu6m9_lsnr.sock
     ```
 
 ## How to create an Fn (OCI Functions) Function without FDK
@@ -28,8 +29,9 @@
   - Create a symbolic link named FN_LISTENER which is linked to this file with a relative path
   - As a result, the placement of files is like this
     ```
-    lrwxrwxrwx. 1 root root 17 Mar  3 17:45 /tmp/iofs/lsnr.sock -> YvzDu6m9_fnlsnr.sock
-    srw-rw-rw-. 1 root root  0 Mar  3 17:45 /tmp/iofs/YvzDu6m9_lsnr.sock
+    $ ls -l /tmp/iofs
+    lrwxrwxrwx. 1 root root 17 Mar  3 17:45 lsnr.sock -> YvzDu6m9_lsnr.sock
+    srw-rw-rw-. 1 root root  0 Mar  3 17:45 YvzDu6m9_lsnr.sock
     ```
 
 
