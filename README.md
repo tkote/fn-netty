@@ -206,7 +206,8 @@ $ export mainClass=org.example.reactor.FnServer
 * OCI API Gateway -> OCI Functions
 
   ```
-  $curl -X POST -d "[]" -H "Content-Type: application/json" https://xxxxxx.apigateway.us-ashburn-1.oci.customer-oci.com/fn-netty/
+  $curl -X POST -d "[]" -H "Content-Type: application/json" \
+    https://xxxxxx.apigateway.us-ashburn-1.oci.customer-oci.com/fn-netty/
 
   FN-NETTY (REACTOR) SERVER
   ===================================
@@ -247,6 +248,6 @@ $ export mainClass=org.example.reactor.FnServer
   CONTENT: []
   END OF CONTENT
   ```
-  
+
   `Fn-Http-xxx` でAPI Gatewayが受けっとったHTTPリクエストの内容が転送されているのが分かる
 
