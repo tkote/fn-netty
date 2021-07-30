@@ -183,18 +183,70 @@ $ export mainClass=org.example.reactor.FnServer
   HEADER: Transfer-Encoding = chunked
   HEADER: Accept-Encoding = gzip
   HEADER: Content-Type = application/json
-  HEADER: Date = Sat, 13 Mar 2021 03:38:15 GMT
-  HEADER: Fn-Call-Id = 01F0MTKJ5B1BT0G60ZJ001JFKX
-  HEADER: Fn-Deadline = 2021-03-13T03:43:48Z
-  HEADER: Oci-Subject-Id = ocid1.user.oc1..
-  HEADER: Oci-Subject-Tenancy-Id = ocid1.tenancy.oc1..
+  HEADER: Date = Fri, 30 Jul 2021 20:53:55 GMT
+  HEADER: Fn-Call-Id = 01FBWK3SVZ1BT0H18ZJ000MVYQ
+  HEADER: Fn-Deadline = 2021-07-30T20:58:53Z
+  HEADER: Oci-Subject-Compartment-Id = ocid1.tenancy.oc1..xxxxxx
+  HEADER: Oci-Subject-Id = ocid1.user.oc1..xxxxxx
+  HEADER: Oci-Subject-Tenancy-Id = ocid1.tenancy.oc1..xxxxxx
   HEADER: Oci-Subject-Type = user
-  HEADER: Opc-Compartment-Id = ocid1.compartment.oc1..
-  HEADER: Opc-Request-Id = /01F0MTKJ331BT0G60ZJ001JFKV/01F0MTKJ331BT0G60ZJ001JFKW
-  HEADER: X-Content-Sha256 = A7ogTlDRJuRnTABeBNguhMITZngK8fQ71Uo3gWtqs0A=
+  HEADER: Opc-Compartment-Id = ocid1.compartment.oc1..xxxxxx
+  HEADER: Opc-Request-Id = /01FBWK3ST90000000000015JDG/01FBWK3ST90000000000015JDH
+  HEADER: X-B3-Spanid = 4d52a9209c1ea317
+  HEADER: X-B3-Traceid = 4d52a9209c1ea317
+  HEADER: X-Content-Sha256 = f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk=
   
   CONTENT: Hello World!
   END OF CONTENT
   ```
   
   OCI Functions `Content-Type: application/json` になってる...
+
+
+* OCI API Gateway -> OCI Functions
+
+  ```
+  $curl -X POST -d "[]" -H "Content-Type: application/json" https://xxxxxx.apigateway.us-ashburn-1.oci.customer-oci.com/fn-netty/
+
+  FN-NETTY (REACTOR) SERVER
+  ===================================
+  VERSION: HTTP/1.1
+  HOSTNAME: localhost
+  REQUEST_URI: /call
+
+  HEADER: Host = localhost
+  HEADER: User-Agent = lua-resty-http/0.14 (Lua) ngx_lua/10019
+  HEADER: Transfer-Encoding = chunked
+  HEADER: Content-Type = application/json
+  HEADER: Date = Fri, 30 Jul 2021 20:26:32 GMT
+  HEADER: Fn-Call-Id = 01FBWHHP481BT0J1GZJ000PM8T
+  HEADER: Fn-Deadline = 2021-07-30T20:31:43Z
+  HEADER: Fn-Http-H-Accept = */*
+  HEADER: Fn-Http-H-Cdn-Loop = fdJfCZhy618AGmi5huTgzQ
+  HEADER: Fn-Http-H-Content-Length = 2
+  HEADER: Fn-Http-H-Content-Type = application/json
+  HEADER: Fn-Http-H-Forwarded = for=129.213.131.125
+  HEADER: Fn-Http-H-Host = xxxxxx.apigateway.us-ashburn-1.oci.customer-oci.com
+  HEADER: Fn-Http-H-User-Agent = curl/7.29.0
+  HEADER: Fn-Http-H-X-Forwarded-For = xxx.xxx.xxx.xxx
+  HEADER: Fn-Http-H-X-Real-Ip = xxx.xxx.xxx.xxx
+  HEADER: Fn-Http-Method = POST
+  HEADER: Fn-Http-Request-Url = /fn-netty/
+  HEADER: Fn-Intent = httprequest
+  HEADER: Fn-Invoke-Type = sync
+  HEADER: Oci-Subject-Compartment-Id = ocid1.compartment.oc1..xxxxxx
+  HEADER: Oci-Subject-Id = ocid1.apigateway.oc1.iad.xxxxxx
+  HEADER: Oci-Subject-Tenancy-Id = ocid1.tenancy.oc1..xxxxxx
+  HEADER: Oci-Subject-Type = resource
+  HEADER: Opc-Request-Id = /6997BF9ED7E80B78B3834B7EB7054184/01FBWHHP3X0000000000019C89
+  HEADER: X-B3-Spanid = 5642ee33c9d0c82c
+  HEADER: X-B3-Traceid = 5642ee33c9d0c82c
+  HEADER: X-Content-Sha256 = T1PNoYwrqgwDVLtfmj7L5e0Sq02OEbqHPC8RFhICuUU=
+  HEADER: Accept-Encoding = gzip
+
+  CONTENT: []
+  END OF CONTENT
+  ```
+  
+  `Fn-Http-xxx` でAPI Gatewayが受けっとったHTTPリクエストの内容が転送されているのが分かる
+
