@@ -23,6 +23,15 @@ public class SnoopHandler implements BiFunction<HttpServerRequest,HttpServerResp
             buf.append("FN-NETTY (REACTOR) SERVER\r\n");
             buf.append("===================================\r\n");
 
+            Map<String,String> envs = System.getenv();
+            boolean isPrintEnv = Boolean.parseBoolean(envs.getOrDefault("PRINT_ENV", "false"));
+            if(isPrintEnv){
+                envs.forEach((k,v) -> {
+                    buf.append("ENV: ").append(k).append("=").append(v).append("\r\n");
+                });
+                buf.append("\r\n");
+            }
+
             buf.append("VERSION: ").append(request.version()).append("\r\n");
             buf.append("HOSTNAME: ").append(request.requestHeaders().get(HttpHeaderNames.HOST, "unknown")).append("\r\n");
             buf.append("REQUEST_URI: ").append(request.uri()).append("\r\n\r\n");

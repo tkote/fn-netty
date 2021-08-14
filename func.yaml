@@ -4,3 +4,6 @@ name: fn-netty
 version: 0.0.1
 timeout: 300
 memory: 256 # 128/256/512/1024
+config:
+  PRINT_ENV: true
+
