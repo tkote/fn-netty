@@ -168,7 +168,7 @@ $ export mainClass=org.example.reactor.FnServer
   END OF CONTENT
   ```
 
-* OCI Functions
+* OCI Functions (trace=ON)
 
   ```
   $ echo -n 'Hello World!' | fn invoke funcapp fn-netty
@@ -203,7 +203,7 @@ $ export mainClass=org.example.reactor.FnServer
   OCI Functions `Content-Type: application/json` になってる...
 
 
-* OCI API Gateway -> OCI Functions
+* OCI API Gateway -> OCI Functions (trace=ON)
 
   ```
   $curl -X POST -d "[]" -H "Content-Type: application/json" \
@@ -226,11 +226,11 @@ $ export mainClass=org.example.reactor.FnServer
   HEADER: Fn-Http-H-Cdn-Loop = fdJfCZhy618AGmi5huTgzQ
   HEADER: Fn-Http-H-Content-Length = 2
   HEADER: Fn-Http-H-Content-Type = application/json
-  HEADER: Fn-Http-H-Forwarded = for=129.213.131.125
+  HEADER: Fn-Http-H-Forwarded = for=xxx.xxx.xxx.xxx
   HEADER: Fn-Http-H-Host = xxxxxx.apigateway.us-ashburn-1.oci.customer-oci.com
   HEADER: Fn-Http-H-User-Agent = curl/7.29.0
   HEADER: Fn-Http-H-X-Forwarded-For = xxx.xxx.xxx.xxx
-  HEADER: Fn-Http-H-X-Real-Ip = xxx.xxx.xxx.xxx
+  HEADER: Fn-Http-H-X-Real-Ip = zzz.zzz.zzz.zzz
   HEADER: Fn-Http-Method = POST
   HEADER: Fn-Http-Request-Url = /fn-netty/
   HEADER: Fn-Intent = httprequest
@@ -251,3 +251,72 @@ $ export mainClass=org.example.reactor.FnServer
 
   `Fn-Http-xxx` でAPI Gatewayが受けっとったHTTPリクエストの内容が転送されているのが分かる
 
+* OCI API Gateway -> OCI Functions (trace=ON)  
+  Functions の config で PRINT_ENV=TRUE に設定して環境変数も出力
+
+```
+FN-NETTY (REACTOR) SERVER
+===================================
+ENV: FN_FN_NAME=fn-netty
+ENV: PATH=/usr/local/openjdk-8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV: OCI_RESOURCE_PRINCIPAL_RPST=/.oci-credentials/rpst
+ENV: JAVA_HOME=/usr/local/openjdk-8
+ENV: FN_APP_ID=ocid1.fnapp.oc1.iad.xxxxxx
+ENV: FN_CPUS=125m
+ENV: LANG=C.UTF-8
+ENV: OCI_TRACE_COLLECTOR_URL=https://xxxxxx.apm-agt.us-ashburn-1.oci.oraclecloud.com/20200101/observations/public-span?dataFormat=zipkin&dataFormatVersion=2&dataKey=xxxxxx
+ENV: FN_MEMORY=256
+ENV: FN_LOGFRAME_NAME=01FD180P0F0000000000001CGW
+ENV: PRINT_ENV=true
+ENV: JAVA_VERSION=8u282
+ENV: FN_LOGFRAME_HDR=Opc-Request-Id
+ENV: OCI_REGION_METADATA={"realmDomainComponent":"oraclecloud.com","realmKey":"oc1","regionIdentifier":"us-ashburn-1","regionKey":"IAD"}
+ENV: FN_TYPE=sync
+ENV: OCI_TRACING_ENABLED=1
+ENV: OCI_RESOURCE_PRINCIPAL_VERSION=2.2
+ENV: OCI_RESOURCE_PRINCIPAL_REGION=us-ashburn-1
+ENV: OCI_RESOURCE_PRINCIPAL_PRIVATE_PEM=/.oci-credentials/private.pem
+ENV: FN_FN_ID=ocid1.fnfunc.oc1.iad.xxxxxx
+ENV: FN_APP_NAME=funcapp
+ENV: HOSTNAME=308cc78a5d83
+ENV: FN_FORMAT=http-stream
+ENV: FN_LISTENER=unix:/tmp/iofs/lsnr.sock
+ENV: HOME=/
+
+VERSION: HTTP/1.1
+HOSTNAME: localhost
+REQUEST_URI: /call
+
+HEADER: Host = localhost
+HEADER: User-Agent = lua-resty-http/0.14 (Lua) ngx_lua/10019
+HEADER: Transfer-Encoding = chunked
+HEADER: Content-Type = application/json
+HEADER: Date = Sat, 14 Aug 2021 02:34:49 GMT
+HEADER: Fn-Call-Id = 01FD1862RF1BT0J4GZJ000TGF8
+HEADER: Fn-Deadline = 2021-08-14T02:39:47Z
+HEADER: Fn-Http-H-Accept = */*
+HEADER: Fn-Http-H-Cdn-Loop = fdJfCZhy618AGmi5huTgzQ
+HEADER: Fn-Http-H-Content-Length = 2
+HEADER: Fn-Http-H-Content-Type = application/json
+HEADER: Fn-Http-H-Forwarded = for=xxx.xxx.xxx.xxx
+HEADER: Fn-Http-H-Host = xxxxxx.apigateway.us-ashburn-1.oci.customer-oci.com
+HEADER: Fn-Http-H-User-Agent = curl/7.29.0
+HEADER: Fn-Http-H-X-Forwarded-For = xxx.xxx.xxx.xxx
+HEADER: Fn-Http-H-X-Real-Ip = zzz.zzz.zzz.zzz
+HEADER: Fn-Http-Method = POST
+HEADER: Fn-Http-Request-Url = /fn-netty/
+HEADER: Fn-Intent = httprequest
+HEADER: Fn-Invoke-Type = sync
+HEADER: Oci-Subject-Compartment-Id = ocid1.compartment.oc1..xxxxxx
+HEADER: Oci-Subject-Id = ocid1.apigateway.oc1.iad.xxxxxx
+HEADER: Oci-Subject-Tenancy-Id = ocid1.tenancy.oc1..xxxxxx
+HEADER: Oci-Subject-Type = resource
+HEADER: Opc-Request-Id = /A22D916112C989A90997B447C703F90A/01FD1862QW000000000001G0XG
+HEADER: X-B3-Spanid = 3ebf93f7eca825ec
+HEADER: X-B3-Traceid = 3ebf93f7eca825ec
+HEADER: X-Content-Sha256 = T1PNoYwrqgwDVLtfmj7L5e0Sq02OEbqHPC8RFhICuUU=
+HEADER: Accept-Encoding = gzip
+
+CONTENT: []
+END OF CONTENT
+```
