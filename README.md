@@ -320,3 +320,9 @@ HEADER: Accept-Encoding = gzip
 CONTENT: []
 END OF CONTENT
 ```
+
+ちなみに trace=OFF にすると、  
+`ENV: OCI_TRACE_COLLECTOR_URL=`  
+`ENV: OCI_TRACING_ENABLED=0`  
+となる
+
