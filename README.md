@@ -23,10 +23,10 @@
 + Handle POST /call
 + The file name to be bound is passed via the environment variable FN_LISTENER  
   example: /tmp/iofs/lsnr.sock
-  - Bind socket to another file which is different from FN_LISTENER located in the same directory  
+  - Bind socket to another file which is different from ${FN_LISTENER} located in the same directory  
     example: /tmp/iofs/YvzDu6m9_lsnr.sock
   - Set rw-rw-rw- permission to this file
-  - Create a symbolic link named FN_LISTENER which is linked to this file with a relative path
+  - Create a symbolic link named ${FN_LISTENER} which is linked to the bound file as a relative path
   - As a result, the placement of files is like this
     ```
     $ ls -l /tmp/iofs
